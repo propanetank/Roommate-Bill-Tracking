@@ -1,0 +1,135 @@
+/* Main Website Parts */
+@import url('https://fonts.googleapis.com/css?family=Dosis');
+
+html {
+	background-color: #3a3a3a;
+	font-family: 'Dosis', sans-serif;
+}
+h1 {
+	font-size: 18pt;
+}
+div#container {
+	background-color: #cccccc;
+	min-width: 75%;
+	max-width: 75%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1%;
+	margin-bottom: 5%;
+	padding: 2% 5%;
+	border: 2px solid #f4f4f4;
+	border-radius: 5px;
+}
+section#primary {
+	min-width: 75%;
+	max-width: 75%;
+	margin-right: 6%;
+}
+section#right {
+	min-width: 19%;
+	max-width: 19%;
+	float: right;
+}
+p.err {
+	color: red;
+	font-weight: bold;
+}
+table.dashboard {
+	border-collapse: collapse;
+}
+table.dashboard {
+	border: 0;
+}
+.dashboard th, .dashboard td {
+	border-bottom: 2px solid #afafaf;
+	padding: 1em 1.8em;
+	margin: 0 0.5em;
+}
+.dashboard th {
+	background-color: #afafaf;
+}
+.dashboard tr:hover {
+	background-color: #afafaf;
+}
+a {
+	text-decoration: none;
+	color: #000000;
+}
+a:visited {
+	text-decoration: none;
+	color: #000000;
+}
+a:hover {
+	text-decoration: underline;
+	color: #000000;
+}
+
+/* Navigation */
+section#nav {
+	background-color: #cccccc;
+	min-width: 75%;
+	max-width: 75%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1%;
+	margin-bottom: 1%;
+	padding: 0 5%;
+	border: 2px solid #f4f4f4;
+	border-radius: 5px;
+}
+#nav div {
+	max-width: 30%;
+}
+#nav nav {
+	max-width: 70%;
+	float: right;
+}
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	text-align: right;
+}
+nav li {
+	display: inline;
+}
+nav li a, nav li a:visited {
+	color: black;
+	padding: 1.6em 1.5em;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+nav li a:hover, nav li a.active {
+	background-color: white;
+	text-decoration: none;
+}
+
+/* Bill Entry Form */
+
+
+/* Login Form */
+label {
+	display: table-cell;
+	min-width: 8em;
+	float: left;
+}
+input#username, input#password {
+	min-width: 17em;
+}
+input#username, input#password, input#login {
+	border-radius: 5px;
+	border: 2px solid black;
+	padding: 5px;
+	margin: 0.2em 0;
+}
+input#login {
+	background-color: white;
+}
+input[type=submit] {
+	margin: 0.2em 0;
+}
+input[type=submit]:hover {
+	cursor: pointer;
+}
