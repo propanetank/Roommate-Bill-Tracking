@@ -1,15 +1,4 @@
 <?php
-	// Site functions here
-	// SQL Statements
-
-
-	// SQL Error messages
-	$dbConnErr = "<p class=\"err\">Unable to connect to the database. Please wait a minute and try again. If the problem persists, contact the <a href=\"mailto:" . ADMIN_EMAIL . "?subject=[ " . SITE_TITLE . " ] Database connection error\">site administrators</a> for assistance.</p>";
-	$dbErr =  "<p class=\"err\">Unable to update the database. Is the data correct? Please wait a minute and try again. If the problem persists, contact the <a href=\"mailto:" . ADMIN_EMAIL . "?subject=[ " . SITE_TITLE . " ] Error changing data in the database\">site administrators</a> for assistance.</p>";
-
-	// Generic Error messages
-
-
 	// Begin Functions
 	$conn = new mysqli(DB_HOST, DB_USER, DB_PASSWD, DB_NAME);
 	function checkDatabaseConn() {
@@ -18,6 +7,15 @@
 			echo "<h3 class='error'>Error connecting to the database, unable to fetch data!</h3>";
 			echo "<p class='error'>Please try loading the page in a few minutes.</p>";
 			die($conn->connect_error);
+		}
+	}
+
+	function ssl() {
+		if (SSL) {
+			if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off") {
+				header("HTTP/1.1 301 Moved Permanently");
+				header("Location: https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+			}
 		}
 	}
 
@@ -68,7 +66,7 @@
 		if ($getSalt->num_rows > 0) {
 			$pass[0] = $getSalt->fetch_object()->password;  // The entire hash
 			$pass[1] = substr($pass[0], 3, 10);  // The salt
-			return $pass;  // Return array containing the entire hash (pos 0) and the salt (pos)
+			return $pass;  // Return array containing the entire hash (pos 0) and the salt (pos 1)
 		} else {
 			return false;
 		}

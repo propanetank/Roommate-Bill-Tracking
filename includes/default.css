@@ -1,5 +1,5 @@
 /* Main Website Parts */
-@import url('https://fonts.googleapis.com/css?family=Dosis');
+@import url('https://fonts.googleapis.com/css?family=Dosis:400,600');
 
 html {
 	background-color: #3a3a3a;
@@ -7,6 +7,7 @@ html {
 }
 h1 {
 	font-size: 18pt;
+	font-weight: 400;
 }
 div#container {
 	background-color: #cccccc;
@@ -21,13 +22,13 @@ div#container {
 	border-radius: 5px;
 }
 section#primary {
-	min-width: 75%;
-	max-width: 75%;
+	min-width: 65%;
+	max-width: 65%;
 	margin-right: 6%;
 }
 section#right {
-	min-width: 19%;
-	max-width: 19%;
+	min-width: 29%;
+	max-width: 29%;
 	float: right;
 }
 p.err {

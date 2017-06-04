@@ -11,31 +11,28 @@
 	// Make sure the Bill To isn't null
 	if (!isset($_POST['to']))
 		$_SESSION['toErrtxt'] = "Invalid person to send a bill to.";
-	else if (empty($_POST['to']))
-		$_SESSION['toErrtxt'] = "To cannot be left blank.";
 
 	// Validate the data in the amount field is what we intended
 	if (!empty($_POST['amount'])) {
-		if (!preg_match("/^\d{1,3}\.\d{2}$", $_POST['amount'])) {
+		if (!preg_match("/^\d{1,3}\.\d{2}$/", $_POST['amount']))
 			$_SESSION['amtErrtxt'] = "Invalid dollar amount, must be more than $0 and less than $1000 with the cents (including 00 cents)";
-		} else {
-			// Convert the string to a number format so we can make sure they entered a value larger than 0
-			$amount = number_format($_POST['amount'], 2);
-			if ($amount <= 0)
-				$_SESSION['amtErrtxt'] = "Invalid dollar amount, must be more than $0 and less than $1000 with the cents (including cents)";
-		}
+		else
+			$amount = $_POST['amount'];
 	} else
 		$_SESSION['amtErrtxt'] = "Must specify an amount";
 
 	// Validate the data in the description field if entered
 	if (!empty($_POST['description'])) {
 		$description = sanitizeData($_POST['description']);
-		if (!preg_match("/[a-zA-Z0-9 ]+/", $description))
+		if (!preg_match("/^[a-zA-Z0-9 ]*$/", $description)) {
 			$_SESSION['descErrtxt'] = "Invalid input for Description. Only a-z, A-Z, 0-9, and spaces are allowed.";
+		}
 	}
 
 	// If errors are found, direct user back to the previous page
 	if (isset($_SESSION['toErrtxt']) || isset($_SESSION['amtErrtxt']) || isset($_SESSION['descErrtxt'])) {
+		$_SESSION['amt'] = $_POST['amount'];
+		$_SESION['desc'] = $_POST['description'];
 		header("Location: " . PATH . "/new.php?type=bill&error=true");
 		exit(1);
 	}
@@ -50,9 +47,8 @@
 	}
 
 	$i = 0;
-
 	foreach ($_POST['to'] as $value) {
-		$addBill = "INSERT INTO bills (bfrom, bto, bdate, btime, amount, description, paidDate) VALUES ('" . $_SESSION['uid'] . "', '$value', '$currDate', '$currTime', '$amount', '$description', '')";
+		$addBill = "INSERT INTO bills (bfrom, bto, bdate, btime, amount, description) VALUES ('" . $_SESSION['uid'] . "', '$value', '$currDate', '$currTime', '$amount', '$description')";
 		if ($conn->query($addBill) === FALSE) {
 			$_SESSION['errtxt'] = "Unable to add data to the database. Unknown error.";
 			header("Location: " . PATH . "/new.php?type=bill&error=true");
@@ -61,8 +57,8 @@
 			$result = $result->fetch_assoc();
 			$_SESSION['to'][$i] = $result['name'];
 			
-			// If the user has an email on-file, send them an email via the configured process to send email
-			if ($result['email'] != '') {
+			// If the user has an email on-file, send them an email via the configured process to send email, either built-in mail function or via smtp
+/*			if ($result['email'] != '') {
 				$mailTo =  "$result['name'] <$result['email']>";
 				$mailFrom = "FROM: ADMIN_EMAIL";
 				$mailSubject = "New bill in your account";
@@ -80,11 +76,14 @@
 				} else {
 					// Send email via SMTP
 				}
+			} else {
+				echo "<p>" . $result['name'] . " doesn't have an email on file, unable to notify user.</p>";
 			}
-			$i++;
+*/			$i++;
 		}
 	}
-	$_SESSION['amount'] = $_POST['amount'];
+	$conn->close();
+	$_SESSION['amount'] = $amount;
 	$_SESSION['description'] = $description;
 	header("Location: " . PATH . "/new.php?type=bill&success=true");
 

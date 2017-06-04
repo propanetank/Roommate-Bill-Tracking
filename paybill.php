@@ -29,12 +29,16 @@
 		<div id="container">
 			<section id="primary">
 			<?php
-				if ($_SERVER['METHOD']) === "POST") {
+				if ($_SERVER['METHOD']) == "POST") {
 					$i = 0;
 					foreach ($_POST['bill'] as $value) {				
 						$result = $conn->query("SELECT name, paypal, amount FROM users, bills WHERE bfrom=users.id AND bills.id='$value");
 						if ($result->num_rows < 1) {
 							echo "<p class=\"err\">Error, unable to find the bill specified.</p>";
+							exit();
+						}
+						if ($_POST['name'] != $result['name']) {
+							echo "<p class=\"err\">Whoops! As of right now, paying multiple bills is only supported if they are from the same person.</p>"
 							exit();
 						}
 						$_SESSION['billid'][$i] = $value;
@@ -46,7 +50,7 @@
 					?>
 					<?php
 					echo "Paypal should have opened to " . $result['name'] . "'s PayPal with an amount of $" . $totalAmount . " already filled in. If not, check your popup blocker, or go to <a href=\"https://paypal.me/" . $result['paypal'] . "/" . $totalAmount . "\">https://paypal.me/" . $result['paypal'] . "</a> and enter the amount shown prior, or click the link. Once paid, <a href=\"" . $_SERVER['PHP_SELF'] . "?paid=y\">click here</a> to finalize the payment process and return to the dashboard.";
-				} elseif (isset($_GET['paid']) && $_GET['paid'] === 'y') {
+				} else if (isset($_GET['paid']) && $_GET['paid'] === 'y') {
 					$i = 0;
 					$currDate = date('m/d/y');
 					foreach ($_SESSION['billid'] as $value) {

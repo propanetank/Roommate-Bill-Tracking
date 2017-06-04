@@ -51,26 +51,26 @@
 							header("Location: changePassword.php");
 						} else {
 							$pass = getUserPassword();
-							if ($pass === FALSE) {
+							if ($pass === FALSE) {  // We shouldn't need to check this, but it's a good measure to avoid any potential flaws
 								goto end;
 							}
 							$salt = $pass[1];
 
-							$oldPassword = crypt($_POST['current'], '$6$' . $salt);
+							$currPassword = crypt($_POST['current'], '$6$' . $salt);
 
-							// Make a new salt everytime the user changes their password
-							$salt = bin2hex(random_bytes(5));
-							$password = crypt($_POST['new'], '$6$' . $salt);
-
-							if ($pass[0] != $oldPassword) {
+							if (!hash_equals($pass[0], $currPassword)) {
 								goto end;
 							}
 
-							$updatePasswd = "UPDATE users SET password='$password', resetRequired='N' WHERE id='$_SESSION[uid]'";
+							// Make a new salt every time the user changes their password
+							$salt = bin2hex(random_bytes(5));
+							$password = crypt($_POST['new'], '$6$' . $salt);
+
+							$updatePasswd = "UPDATE users SET password='$password', resetRequired='N', resetKey=NULL WHERE id='$_SESSION[uid]'";
 							if ($conn->query($updatePasswd) === TRUE) {
 								unset($_SESSION['password']);
 								unset($_SESSION['resetRequired']);
-								echo "<p>Password updated sucessfully! <a href=\"" . PATH . "/dashboard.php\">Go Home</a>.</p>";
+								echo "<p>Password updated successfully! <a href=\"" . PATH . "/dashboard.php\">Go Home</a>.</p>";
 							} else {
 								end:
 								echo "<p class=\"err\">Unable to update password. Maybe the current password you submitted doesn't match the one saved in your account.</p>";

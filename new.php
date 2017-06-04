@@ -39,7 +39,7 @@
 							<td>
 								<input type="text" name="from" value="<?php echo $_SESSION['name'] ?>" readonly required style="cursor: not-allowed;" /></td>
 							<td>
-								<select name='to[]' multiple required>
+								<select name="to[]" multiple required>
 									<?php
 									$getUsers = "SELECT id, name FROM users WHERE id!='$_SESSION[uid]'";
 									$listUsers = $conn->query($getUsers);
@@ -54,10 +54,20 @@
 								</select>
 							</td>
 							<td>
-								$ <input type="text" name="amount" placeholder="0.00" maxlength="6" size="6" required />
+								$ <input type="number" name="amount" placeholder="0.00" maxlength="6" size="6" value="<?php
+																														if (isset($_SESSION['amt'])) {
+																															echo $_SESSION['amt'];
+																															unset ($_SESSION['amt']);
+																														}
+																													?>" required />
 							</td>
 							<td>
-								<input type="text" name="description" placeholder="Internet" maxlength="50" />
+								<input type="text" name="description" placeholder="Internet" value="<?php
+																										if (isset($_SESSION['desc'])) {
+																											echo $_SESSION['desc'];
+																											unset($_SESSION['desc']);
+																										}
+																									?>" maxlength="50" />
 							</td>
 							<td>
 								<input type="submit" value="Send" name="submit" />
@@ -67,19 +77,19 @@
 					<?php
 						if (isset($_GET['error'])) {
 							if (isset($_SESSION['toErrtxt'])) {
-								echo "<p class='error'>" . $_SESSION['toErrtxt'] . "</p>";
+								echo "<p class='err'>" . $_SESSION['toErrtxt'] . "</p>";
 								unset($_SESSION['toErrtxt']);
 							}
 							if (isset($_SESSION['amtErrtxt'])) {
-								echo "<p class='error'>" . $_SESSION['amtErrtxt'] . "</p>";
+								echo "<p class='err'>" . $_SESSION['amtErrtxt'] . "</p>";
 								unset($_SESSION['amtErrtxt']);
 							}
 							if (isset($_SESSION['descErrtxt'])) {
-								echo "<p class='error'>" . $_SESSION['descErrtxt'] . "</p>";
+								echo "<p class='err'>" . $_SESSION['descErrtxt'] . "</p>";
 								unset($_SESSION['descErrtxt']);
 							}
 							if (isset($_SESSION['errtxt'])) {
-								echo "<p class='error'>" . $_SESSION['errtxt'] . "</p>";
+								echo "<p class='err'>" . $_SESSION['errtxt'] . "</p>";
 								unset($_SESSION['errtxt']);
 							}
 						}

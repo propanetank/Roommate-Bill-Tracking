@@ -25,7 +25,7 @@
 			<section id="primary">
 				<?php 
 				// Make sure someone didn't modify the data between pages and if so, cancel editing the bill because it might not be their bill
-				$billInfo = "SELECT bills.id, bto, name, amount, description, paid FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
+				$billInfo = "SELECT bills.id, bto, name, amount, description, paid, paidDate FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
 				$getBill = $conn->query($billInfo);
 				if ($getBill->num_rows > 0) {
 					$existing = $getBill->fetch_assoc();
@@ -33,9 +33,78 @@
 					$_SESSION['errtxt'] = "Cannot modify bill. Data appears to have been modified in transit.";
 					header("Location: " . PATH . "/profile.php?editerror=true");
 				}
-				if(!isset($_GET['deleted'])) { ?>
-				<h1>Edit Bill</h1>
-				<form action="<?php echo PATH; ?>/includes/editbill.php?bill=<?php echo $exisiting['bill']; ?>" method="post">
+
+				$currDate = date('m/d/y');
+				if (isset($_GET['delete'])) { ?>
+				<h2>Delete Bill</h2>
+				<?php 
+					$deleteBill = $conn->query("UPDATE bills SET deleted='Y', deletedDate='$currDate' WHERE id='$existing[id]'");
+					if ($deleteBill === TRUE) {
+						echo "<p>Removed bill to <b>" . $existing['name'] . "</b> in the amount of <b>$" . $existing['amount'] . "</b>";
+						if ($existing['description'] != '')
+							echo  " for <b>" . $existing['description'] . "</b>. ";
+						else
+							echo ". ";
+						echo "<a href=\"" . PATH . "/profile.php\">Return to profile</a>.</p>";
+					} else
+						echo "<p class=\"err\">Error deleting bill.</p>";
+				} else if (isset($_GET['recover'])) { ?>
+				<h2>Recover Bill</h2>
+					<?php
+						$recoverBill = $conn->query("UPDATE bills SET deleted='N', deletedDate=NULL WHERE id='$existing[id]'");
+						if ($recoverBill === TRUE) {
+							echo "<p>Recovered bill to <b>" . $existing['name'] . "</b> in the amount of <b>$" . $existing['amount'] . "</b>";
+							if ($existing['description'] != '')
+								echo  " for <b>" . $existing['description'] . "</b>. ";
+							else
+								echo ". ";
+							echo "<a href=\"" . PATH . "/profile.php\">Return to profile</a>.</p>";
+						} else
+							echo "<p class=\"err\">Error recovering bill.</p>";
+				} else if ($_GET['edit'] === 'y') {
+					// Make sure the Bill To isn't null
+					if (!isset($_POST['to']))
+						$_SESSION['toErrtxt'] = "Invalid person to send a bill to.";
+
+					// Validate the data in the amount field is what we intended
+					if (!empty($_POST['amount'])) {
+						if (!preg_match("/^\d{1,3}\.\d{2}$/", $_POST['amount'])) {
+							$_SESSION['amtErrtxt'] = "Invalid dollar amount, must be more than $0 and less than $1000 with the cents (including 00 cents)";
+						} else {
+							// Convert the string to a number format so we can make sure they entered a value larger than 0
+							$amount = $_POST['amount'];
+						}
+					} else
+						$_SESSION['amtErrtxt'] = "Must specify an amount";
+
+					// Validate the data in the description field if entered
+					if (!empty($_POST['description'])) {
+						$description = sanitizeData($_POST['description']);
+						if (!preg_match("/^[a-zA-Z0-9 ]*$/", $description)) {
+							$_SESSION['descErrtxt'] = "Invalid input for Description. Only a-z, A-Z, 0-9, and spaces are allowed.";
+						}
+					}
+
+					// If errors are found, direct user back to the previous page
+					if (isset($_SESSION['toErrtxt']) || isset($_SESSION['amtErrtxt']) || isset($_SESSION['descErrtxt'])) {
+						$_SESSION['amt'] = $_POST['amount'];
+						$_SESION['description'] = $_POST['description'];
+						header("Location: " . PATH . "/editbill.php?bill=" . $existing['id']);
+						exit(1);
+					}
+					if ($existing['paid'] === 'Y' && $_POST['paid'] === 'N')
+						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]', paidDate=NULL WHERE id='$existing[id]'";
+					else if ($existing['paid'] === 'N' && $_POST['paid'] === 'Y')
+						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]', paidDate='$currDate' WHERE id='$existing[id]'";
+					else
+						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]' WHERE id='$existing[id]'";
+					if ($conn->query($updateBill) === TRUE)
+						echo "<p>Bill has been successfully updated. <a href=\"" . PATH . "/profile.php\">Return to profile.</a></p>";
+					else
+						echo "<p class=\"err\">" . $conn->error . "<a href=\"" . PATH . "/profile.php\">Return to profile.</a></p>";
+				} else { ?>
+				<h2>Edit Bill</h2>
+				<form action="<?php echo PATH . "/editbill.php?bill=" . $existing['id'] . "&edit=y"; ?>" method="post">
 					<table>
 						<tr>
 							<th>From</th>
@@ -67,14 +136,26 @@
 								</select>
 							</td>
 							<td>
-								$ <input type="text" name="amount" value="<?php echo $existing['amount']; ?>" placeholder="0.00" maxlength="6" size="6" required />
+								$ <input type="text" name="amount" value="<?php
+																			if (isset($_SESSION['amt'])) {
+																				echo $_SESSION['amt'];
+																				unset($_SESSION['amt']);
+																			} else
+																				echo $existing['amount'];
+																			?>" placeholder="0.00" maxlength="6" size="6" required />
 							</td>
 							<td>
-								<input type="text" name="description" value="<?php echo $existing['description']; ?>" placeholder="Internet" maxlength="50" />
+								<input type="text" name="description" value="<?php
+																				if (isset($_SESSION['description'])) {
+																				echo $_SESSION['description'];
+																				unset($_SESSION['description']);
+																			} else
+																				echo $existing['description'];
+																			?>" placeholder="Internet" maxlength="50" />
 							</td>
 							<td>
-								<input type="radio" name="paid" value="yes" <?php if ($existing['paid'] === 'Y') echo "checked" ?> />Yes
-								<input type="radio" name="paid" value="no" <?php if ($existing['paid'] === 'N') echo "checked" ?> />No
+								<input type="radio" name="paid" value="Y" <?php if ($existing['paid'] === 'Y') echo "checked" ?> />Yes
+								<input type="radio" name="paid" value="N" <?php if ($existing['paid'] === 'N') echo "checked" ?> />No
 							</td>
 							<td>
 								<input type="submit" value="Update" name="submit" />
@@ -83,26 +164,23 @@
 					</table>
 					<?php if (isset($_GET['error'])) {
 						if (isset($_SESSION['toErrtxt'])) {
-							echo "<p class='error'>" . $_SESSION['toErrtxt'] . "</p>";
+							echo "<p class=\"err\">" . $_SESSION['toErrtxt'] . "</p>";
 							unset($_SESSION['toErrtxt']);
 						}
 						if (isset($_SESSION['amtErrtxt'])) {
-							echo "<p class='error'>" . $_SESSION['amtErrtxt'] . "</p>";
+							echo "<p class=\"err\">" . $_SESSION['amtErrtxt'] . "</p>";
 							unset($_SESSION['amtErrtxt']);
 						}
 						if (isset($_SESSION['descErrtxt'])) {
-							echo "<p class='error'>" . $_SESSION['descErrtxt'] . "</p>";
+							echo "<p class=\"err\">" . $_SESSION['descErrtxt'] . "</p>";
 							unset($_SESSION['descErrtxt']);
 						}
 						if (isset($_SESSION['errtxt'])) {
-							echo "<p class='error'>" . $_SESSION['errtxt'] . "</p>";
+							echo "<p class=\"err\">" . $_SESSION['errtxt'] . "</p>";
 							unset($_SESSION['errtxt']);
 						}
 					} ?>
 				</form>
-				<?php } else { ?>
-				<h2>Delete Bill</h2>
-
 				<?php } ?>
 			</section>
 		</div>

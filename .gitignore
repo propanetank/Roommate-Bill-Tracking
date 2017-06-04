@@ -1,3 +1,4 @@
 *.sublime-*
 config/config.php
 .Trashes
+.DS_Store

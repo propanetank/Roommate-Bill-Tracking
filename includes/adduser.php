@@ -50,10 +50,10 @@
 	$plainPassword = bin2hex(random_bytes(5));
 	$password = crypt($plainPassword, '$6$' . $salt);
 
-	$createUser = "INSERT INTO users (username, name, email, password, paypal, resetRequired) VALUES ('$username', '$name', '$email', '$password', '$paypal', 'Y')";
-	$addUser = $conn->query($updatePasswd);
+	$createUser = "INSERT INTO users (username, name, email, password, paypal, role) VALUES ('$username', '$name', '$email', '$password', '$paypal', '$_POST[role]')";
+	$addUser = $conn->query($createUser);
 	if ($addUser === TRUE) {
-		$_SESSION['userStatus'] = "<p>Added <b>" . $name . "</b> with username <b>" . $username . "</b> and password <b>" . $plainPassword . "</b>. The new user will be requried to change their password on login. If an email was given, the user has been emailed their login information.</p>";
+		$_SESSION['userStatus'] = "<p>Added <b>" . $name . "</b> with username <b>" . $username . "</b> and password <b>" . $plainPassword . "</b> with role <b>" . $_POST['role'] . "</b>. The new user will be required to change their password on login. If an email was given, the user has been emailed their login information.</p>";
 		if ($email != '') {
 			// Email the user their login details
 			$mailTo =  "$name <$email>";
@@ -79,6 +79,6 @@
 			}
 		}
 	} else 
-		$_SESSION['userStatus'] =  "<p class=\"err\">Unable to add the user to the database. <br />" . $addUser->error() . "</p>";
+		$_SESSION['userStatus'] =  "<p class=\"err\">Unable to add the user to the database.<br />" . $conn->error . "</p>";
 	header("Location: " . PATH . "/profile.php");
 ?>

@@ -5,7 +5,7 @@
 	if (userLoggedIn()) {
 		redirectHome();
 	}
-
+	ssl();
 	if(isset($_COOKIE['username']))
 		$username = $_COOKIE['username'];
 	if(isset($_GET['username']))
