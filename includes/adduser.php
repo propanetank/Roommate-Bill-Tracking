@@ -6,11 +6,11 @@
 		redirectLogin();
 	}
 	if ($_SESSION['role'] != 'ADMIN') {
-		header("Location: " . PATH . "/dashboard.php");
+		header("Location: " . SITE_URL . PATH . "dashboard.php");
 	}
 
 	if ($_SERVER['REQUEST_METHOD'] != 'POST')
-		header("Location: " . PATH . "/dashboard.php");
+		header("Location: " . SITE_URL . PATH . "dashboard.php");
 
 	// Check the input of the user
 	if (!empty($_POST['username'])) {
@@ -41,7 +41,7 @@
 	if (isset($_SESSION['usernameErrtxt']) || isset($_SESSION['nameErrtxt']) || isset($_SESSION['emailErrtxt']) || isset($_SESSION['paypalErrtxt'])) {
 		$_SESSION['userStatus'] = "<p class=\"err\">" . $_SESSION['usernameErrtxt'] . "<br />" . $_SESSION['nameErrtxt'] . "<br />" . $_SESSION['emailErrtxt'] . "<br />" . $_SESSION['paypalErrtxt'] . "</p>";
 		unset($_SESSION['usernameErrtxt'], $_SESSION['nameErrtxt'], $_SESSION['emailErrtxt'], $_SESSION['paypalErrtxt']);
-		header("Location: " . PATH . "/profile.php?error=true");
+		header("Location: " . SITE_URL . PATH . "profile.php?error=true");
 	}
 
 	// All checks have passed, generate a password for the user and add them to the database.
@@ -64,7 +64,7 @@
 			Username: $username\r\n
 			Password: $plainPassword\r\n\r\n
 
-			After changing your passssword, please add your PayPal.me username at SITE_URL/profile.php if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursted for purchases.\r\n\r\n
+			After changing your password, please add your PayPal.me username at SITE_URL/profile.php if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursed for purchases.\r\n\r\n
 			To add a bill for one or more members of the household, simply login and visit SITE_URL/new.php?type=bill and select one or more members, the total bill amount, and an optional description (such as Internet). If more than one person is selected to receive the bill, the application will automatically split the amount, always rounding up to the nearest whole cent. If the person(s) receiving the bill have an email address on file, they will be emailed a notification of the newly requested bill.\r\n\r\n
 			If you have any questions, feel free to contact the site administrator at ADMIN_EMAIL .
 			--
@@ -79,6 +79,6 @@
 			}
 		}
 	} else 
-		$_SESSION['userStatus'] =  "<p class=\"err\">Unable to add the user to the database.<br />" . $conn->error . "</p>";
-	header("Location: " . PATH . "/profile.php");
+		$_SESSION['userStatus'] =  "<p class=\"err\">Unable to add the user to the database.<br /></p>";
+	header("Location: " . SITE_URL . PATH . "profile.php");
 ?>

@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if (changePassword())
-		header("Location: " . PATH . "/includes/changePassword.php");
+		header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -32,11 +32,11 @@
 					$users = explode(',', $existing['users']);
 					if ($users['0'] != $_SESSION['uid']) {
 						$_SESSION['errtxt'] = "It doesn't appear you were next for " . $existing['item'] . ".";
-						header("Location: " . PATH . "/dashboard.php?err=true");
+						header("Location: " . SITE_URL . PATH . "dashboard.php?err=true");
 					}
 				} else {
 					$_SESSION['errtxt'] = "Unable to find specified grocery item.";
-					header("Location: " . PATH . "/dashboard.php?err=true");
+					header("Location: " . SITE_URL . PATH . "dashboard.php?err=true");
 				}
 
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['grocery'] = $existing['id']) {
@@ -58,7 +58,7 @@
 					if (isset($_SESSION['amtErrtxt']) || isset($_SESSION['locErrtxt'])) {
 						$_SESSION['amt'] = $_POST['amount'];
 						$_SESSION['location'] = $_POST['location'];
-						header("Location: " . PATH . "/groceries.php?grocery=" . $existing['id'] . "&err=true");
+						header("Location: " . SITE_URL . PATH . "groceries.php?grocery=" . $existing['id'] . "&err=true");
 					}
 
 					$currDate = date('m/d/y');
@@ -78,7 +78,7 @@
 						// Time to save the new order back to the database
 						$updateItem = "UPDATE groceries SET users='$users' WHERE id='$existing[id]'";
 						if ($conn->query($updateItem) === TRUE)
-							echo "<p>You have been moved to the back of the list. <a href=\"" . PATH . "/dashboard.php\">Return to dashboard.</a></p>";
+							echo "<p>You have been moved to the back of the list. <a href=\"" . PATH . "dashboard.php\">Return to dashboard.</a></p>";
 						else
 							echo "<p class=\"err\">Error updating database.</p>";
 					} else

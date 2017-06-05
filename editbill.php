@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if (changePassword())
-		header("Location: " . PATH . "/includes/changePassword.php");
+		header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -31,7 +31,7 @@
 					$existing = $getBill->fetch_assoc();
 				} else {
 					$_SESSION['errtxt'] = "Cannot modify bill. Data appears to have been modified in transit.";
-					header("Location: " . PATH . "/profile.php?editerror=true");
+					header("Location: " . SITE_URL . PATH . "profile.php?editerror=true");
 				}
 
 				$currDate = date('m/d/y');
@@ -45,7 +45,7 @@
 							echo  " for <b>" . $existing['description'] . "</b>. ";
 						else
 							echo ". ";
-						echo "<a href=\"" . PATH . "/profile.php\">Return to profile</a>.</p>";
+						echo "<a href=\"" . PATH . "profile.php\">Return to profile</a>.</p>";
 					} else
 						echo "<p class=\"err\">Error deleting bill.</p>";
 				} else if (isset($_GET['recover'])) { ?>
@@ -58,7 +58,7 @@
 								echo  " for <b>" . $existing['description'] . "</b>. ";
 							else
 								echo ". ";
-							echo "<a href=\"" . PATH . "/profile.php\">Return to profile</a>.</p>";
+							echo "<a href=\"" . PATH . "profile.php\">Return to profile</a>.</p>";
 						} else
 							echo "<p class=\"err\">Error recovering bill.</p>";
 				} else if ($_GET['edit'] === 'y') {
@@ -89,7 +89,7 @@
 					if (isset($_SESSION['toErrtxt']) || isset($_SESSION['amtErrtxt']) || isset($_SESSION['descErrtxt'])) {
 						$_SESSION['amt'] = $_POST['amount'];
 						$_SESION['description'] = $_POST['description'];
-						header("Location: " . PATH . "/editbill.php?bill=" . $existing['id']);
+						header("Location: " . SITE_URL . PATH . "editbill.php?bill=" . $existing['id']);
 						exit(1);
 					}
 					if ($existing['paid'] === 'Y' && $_POST['paid'] === 'N')
@@ -99,12 +99,12 @@
 					else
 						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]' WHERE id='$existing[id]'";
 					if ($conn->query($updateBill) === TRUE)
-						echo "<p>Bill has been successfully updated. <a href=\"" . PATH . "/profile.php\">Return to profile.</a></p>";
+						echo "<p>Bill has been successfully updated. <a href=\"" . PATH . "profile.php\">Return to profile.</a></p>";
 					else
-						echo "<p class=\"err\">" . $conn->error . "<a href=\"" . PATH . "/profile.php\">Return to profile.</a></p>";
+						echo "<p class=\"err\">" . $conn->error . "<a href=\"" . PATH . "profile.php\">Return to profile.</a></p>";
 				} else { ?>
 				<h2>Edit Bill</h2>
-				<form action="<?php echo PATH . "/editbill.php?bill=" . $existing['id'] . "&edit=y"; ?>" method="post">
+				<form action="<?php echo PATH . "editbill.php?bill=" . $existing['id'] . "&edit=y"; ?>" method="post">
 					<table>
 						<tr>
 							<th>From</th>

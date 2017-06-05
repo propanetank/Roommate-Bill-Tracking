@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 	<head>
-		<link rel="stylesheet" href="<?php echo PATH; ?>/includes/default.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo PATH; ?>includes/default.css" type="text/css" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			function checkSame() {
@@ -70,7 +70,7 @@
 							if ($conn->query($updatePasswd) === TRUE) {
 								unset($_SESSION['password']);
 								unset($_SESSION['resetRequired']);
-								echo "<p>Password updated successfully! <a href=\"" . PATH . "/dashboard.php\">Go Home</a>.</p>";
+								echo "<p>Password updated successfully! <a href=\"" . PATH . "dashboard.php\">Go Home</a>.</p>";
 							} else {
 								end:
 								echo "<p class=\"err\">Unable to update password. Maybe the current password you submitted doesn't match the one saved in your account.</p>";

@@ -11,8 +11,8 @@
 
 	/* General Site Information */
 	define('SITE_TITLE', 'Website Name');
-	define('SITE_URL', 'http://example.com');
-	define('PATH', '/');  // Path relative to the web server, don't add the trailing slash
+	define('SITE_URL', 'http://example.com');  // Your websites URL, if you would like SSL to be used on all pages not just the login page, make it https://
+	define('PATH', '/');  // Path relative to the web server, make sure to include the trailing slash
 	define('OSPATH', dirname(dirname(__FILE__))); // Leave this as is
 	define('LOGIN_TYPE', 'local'); // Options here are google or local
 	define('SSL', false); // Enable if you can use SSL on your server and you are using local LOGIN_TYPE, otherwise it's not necessary

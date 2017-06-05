@@ -45,7 +45,7 @@
 	if (isset($_SESSION['errtxt'])) {
 		$_SESSION['updateStatus'] = $_SESSION['errtxt'];
 		unset($_SESSION['errtxt']);
-		header("Location: " . PATH . "/profile.php");
+		header("Location: " . SITE_URL . PATH . "profile.php");
 		exit();
 	}
 
@@ -55,5 +55,5 @@
 	} else {
 		$_SESSION['updateStatus'] = "<p class=\"err\">Unable to update profile.</p>";
 	}
-	header("Location: " . PATH . "/profile.php");
+	header("Location: " . SITE_URL . PATH . "profile.php");
 ?>

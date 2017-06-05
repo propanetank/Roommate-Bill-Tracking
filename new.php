@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if (changePassword())
-		header("Location: " . PATH . "/includes/changePassword.php");
+		header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -24,7 +24,7 @@
 		<div id="container">
 			<section id="primary">
 				<h1>New Bill</h1>
-				<form action="<?php echo PATH; ?>/includes/submitnew.php?type=bill" method="post">
+				<form action="<?php echo PATH; ?>includes/submitnew.php?type=bill" method="post">
 					<p>Fields labeled with <span class="error">*</span> are required.</p>
 					<p>To select more than one recipient, hold <i>control</i>. When selecting more that one recipient, enter the full bill amount.</p>
 					<table>

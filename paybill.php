@@ -63,11 +63,11 @@
 						}
 						$i++;
 					}
-					echo "<p>Successfully paid " . $_SESSION['bill'][$i]['name'] . " $" . $_SESSION['total'] . ". Return to your <a href=\"" . PATH . "/dashboard.php\">dashboard</a>.</p>";
+					echo "<p>Successfully paid " . $_SESSION['bill'][$i]['name'] . " $" . $_SESSION['total'] . ". Return to your <a href=\"" . PATH . "dashboard.php\">dashboard</a>.</p>";
 					unset($_SESSION['bill']);
 					unset($_SESSION['billid']);
 					unset($_SESSION['total']);
 				} else {
-					header("Location: " . PATH . "/dashboard.php");
+					header("Location: " . SITE_URL . PATH . "dashboard.php");
 				}
 			?>

@@ -14,7 +14,7 @@
 	// Make sure they actually sent a username or password
 	if(empty($_POST['username']) || empty($_POST['password'])) {
 		$_SESSION['errtxt'] = "You must enter a username and password.";
-		header("Location: " . PATH . "/login.php?error=true&username=" . $username);
+		header("Location: " . SITE_URL . PATH . "login.php?error=true&username=" . $username);
 	}
 
 	// Get the salt from the users password
@@ -42,14 +42,14 @@
 			if ($row['resetRequired'] === 'Y') {
 				$_SESSION['password'] = $_POST['password'];
 				$_SESSION['resetRequired'] = 'Y';
-				header("Location: " . PATH . "/includes/changePassword.php");
+				header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 			}
 		}
-		header("Location: " . PATH . "/");
+		header("Location: " . SITE_URL . PATH);
 	} else {
 		end:
 		// Incorrect login, redirect back to login page and give them an error
 		$_SESSION['errtxt'] = "Username and/or password incorrect, please try again.";
-		header("Location: " . PATH . "/login.php?error=true&username=" . $username);
+		header("Location: " . SITE_URL . PATH . "login.php?error=true&username=" . $username);
 	}
 ?>

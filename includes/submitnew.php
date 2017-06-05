@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if ($_SERVER['REQUEST_METHOD'] != 'POST')
-		header("Location: " . PATH . "/new.php");
+		header("Location: " . SITE_URL . PATH . "new.php");
 
 	// Make sure the Bill To isn't null
 	if (!isset($_POST['to']))
@@ -33,7 +33,7 @@
 	if (isset($_SESSION['toErrtxt']) || isset($_SESSION['amtErrtxt']) || isset($_SESSION['descErrtxt'])) {
 		$_SESSION['amt'] = $_POST['amount'];
 		$_SESION['desc'] = $_POST['description'];
-		header("Location: " . PATH . "/new.php?type=bill&error=true");
+		header("Location: " . SITE_URL . PATH . "new.php?type=bill&error=true");
 		exit(1);
 	}
 
@@ -51,7 +51,7 @@
 		$addBill = "INSERT INTO bills (bfrom, bto, bdate, btime, amount, description) VALUES ('" . $_SESSION['uid'] . "', '$value', '$currDate', '$currTime', '$amount', '$description')";
 		if ($conn->query($addBill) === FALSE) {
 			$_SESSION['errtxt'] = "Unable to add data to the database. Unknown error.";
-			header("Location: " . PATH . "/new.php?type=bill&error=true");
+			header("Location: " . SITE_URL . PATH . "new.php?type=bill&error=true");
 		} else {
 			$result = $conn->query("SELECT name, email FROM users WHERE id='$value'");
 			$result = $result->fetch_assoc();
@@ -85,6 +85,6 @@
 	$conn->close();
 	$_SESSION['amount'] = $amount;
 	$_SESSION['description'] = $description;
-	header("Location: " . PATH . "/new.php?type=bill&success=true");
+	header("Location: " . SITE_URL . PATH . "new.php?type=bill&success=true");
 
 ?>

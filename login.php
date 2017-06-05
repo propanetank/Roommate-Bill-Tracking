@@ -29,7 +29,7 @@
 			<section id="primary">
 				<h1><?php echo $page; ?></h1>
 				<h2>Login</h2>
-				<form action="<?php echo PATH; ?>/includes/login.php" method="post">
+				<form action="<?php echo PATH; ?>includes/login.php" method="post">
 					<label for="username">Username: </label><input type="text" name="username" id="username" value="<?php echo $username; ?>" maxlength="20" autofocus/><br />
 					<label for="password">Password: </label><input type="password" name="password" id="password" maxlength="25" /><br />
 					<label for="remember">Remember Me: </label><input type="checkbox" name="remember" id="remember" value="yes" checked /><br />

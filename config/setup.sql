@@ -72,7 +72,12 @@ ALTER TABLE `groceries`
 ALTER TABLE `groceryHistory`
   MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;COMMIT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+INSERT INTO `users` (`id`, `username`, `name`, `email`, `password`, `paypal`, `resetKey`, `resetRequired`, `apiKey`, `role`) VALUES
+(10, 'admin', 'Administrator', '', '$6$efe91420ba$YFxJpk7FMPL4G4sJg5jfgceRzsqBOuqB6g9j2fRKl1f0puuIlE2Gew0nqWB82UsKRNIhPRFXrG7KPDmQCILbv1', '', NULL, 'N', NULL, 'ADMIN');
+
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

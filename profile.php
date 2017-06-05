@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if (changePassword())
-		header("Location: " . PATH . "/includes/changePassword.php");
+		header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -51,7 +51,7 @@
 						$getBills = "SELECT bills.id, name, bdate, amount, description FROM users, bills WHERE bfrom='$_SESSION[uid]' AND bto=users.id AND paid='N' AND deleted='N' ORDER BY bdate, btime DESC";
 						$billList = $conn->query($getBills);
 						if ($billList->num_rows > 0) {
-							echo "<div style=\"overflow-x: auto;\">";
+							echo "<div class=\"table\">";
 							echo "<table class=\"dashboard\">
 									<tr>
 										<th>Date</th>
@@ -66,8 +66,8 @@
 								  	  <td>" . $row["name"] . "<input type=\"hidden\" name=\"name\" value=\"" . $row["name"] . "\" /></td>
 								 	  <td>$" . $row["amount"] . "</td>
 								 	  <td>" . $row["description"] . "</td>
-								  	  <td><a href=\"" . PATH . "/editbill.php?bill=" . $row['id'] . "\">Edit</a></td>
-							  	 	  <td><a href=\"" . PATH . "/editbill.php?bill=" . $row['id'] . "&delete=true\">Delete</a></td>";
+								  	  <td><a href=\"" . PATH . "editbill.php?bill=" . $row['id'] . "\">Edit</a></td>
+							  	 	  <td><a href=\"" . PATH . "editbill.php?bill=" . $row['id'] . "&delete=true\">Delete</a></td>";
 								echo "</tr>";
 							}
 							echo "</table>";
@@ -83,7 +83,7 @@
 						$billList = $conn->query($getBills);
 						$currDate = strtotime(date('m/d/y'));
 						if ($billList->num_rows > 0) {
-							echo "<div style=\"overflow-x: auto;\">";
+							echo "<div class=\"table\">";
 							echo "<table class=\"dashboard\">
 									<tr>
 										<th>Date</th>
@@ -100,8 +100,8 @@
 								 	  <td>$" . $row["amount"] . "</td>
 								 	  <td>" . $row["description"] . "</td>
 									  <td>" . $row["paidDate"] . "</td>
-								  	  <td><a href=\"" . PATH . "/editbill.php?bill=" . $row['id'] . "\">Edit</a></td>
-							  	 	  <td><a href=\"" . PATH . "/editbill.php?bill=" . $row['id'] . "&delete=true\">Delete</a></td>";
+								  	  <td><a href=\"" . PATH . "editbill.php?bill=" . $row['id'] . "\">Edit</a></td>
+							  	 	  <td><a href=\"" . PATH . "editbill.php?bill=" . $row['id'] . "&delete=true\">Delete</a></td>";
 								echo "</tr>";
 							}
 							echo "</table>";
@@ -118,7 +118,7 @@
 						$billList = $conn->query($getBills);
 						$currDate = strtotime(date('m/d/y'));
 						if ($billList->num_rows > 0) {
-							echo "<div style=\"overflow-x: auto;\">";
+							echo "<div class=\"table\">";
 							echo "<table class=\"dashboard\">
 									<tr>
 										<th>Date</th>
@@ -138,7 +138,7 @@
 										  <td>$" . $row["amount"] . "</td>
 										  <td>" . $row["description"] . "</td>
 										  <td>" . $row["deletedDate"] . "</td>
-										  <td><a href=\"" . PATH . "/editbill.php?bill=" . $row['id'] . "&recover=true\">Recover</a></td>";
+										  <td><a href=\"" . PATH . "editbill.php?bill=" . $row['id'] . "&recover=true\">Recover</a></td>";
 									echo "</tr>";
 								}
 							}
@@ -156,7 +156,7 @@
 							$getBills = "SELECT bills.id, name, bdate, amount, description, paid, paidDate, paypal FROM users, bills WHERE bto='$_SESSION[uid]' AND bfrom=users.id AND deleted='N' AND paid='N' ORDER BY paid, bdate, btime DESC";
 							$billList = $conn->query($getBills);
 							if ($billList->num_rows > 0) {
-								echo "<div style=\"overflow-x: auto;\">";
+								echo "<div class=\"table\">";
 								echo "<table class=\"dashboard\">
 										<tr>
 											<th>Date</th>
@@ -197,7 +197,7 @@
 					$getBills = "SELECT bills.id, name, bdate, amount, description, paid, paidDate, paypal FROM users, bills WHERE bto='$_SESSION[uid]' AND bfrom=users.id AND deleted='N' AND paid='Y' ORDER BY paid, bdate, btime DESC";
 					$billList = $conn->query($getBills);
 					if ($billList->num_rows > 0) {
-						echo "<div style=\"overflow-x: auto;\">";
+						echo "<div class=\"table\">";
 						echo "<table class=\"dashboard\">
 								<tr>
 									<th>Date</th>
@@ -244,7 +244,7 @@
 					unset($_SESSION['updateStatus']);
 				}
 				?>
-				<p><a href="<?php echo PATH; ?>/includes/changePassword.php">Update Password</a></p>
+				<p><a href="<?php echo PATH; ?>includes/changePassword.php">Update Password</a></p>
 				<h2>Groceries</h2>
 				<?php
 					$getGroceries = "SELECT * FROM groceries";

@@ -20,11 +20,11 @@
 	}
 
 	function redirectLogin() {
-		header("Location: " . PATH . "/login.php");
+		header("Location: " . SITE_URL . PATH . "login.php");
 	}
 
 	function redirectHome() {
-		header("Location: " . PATH . "/");
+		header("Location: " . SITE_URL . PATH);
 	}
 
 	function userLoggedIn() {

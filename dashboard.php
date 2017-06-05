@@ -6,7 +6,7 @@
 		redirectLogin();
 	}
 	if (changePassword())
-		header("Location: " . PATH . "/includes/changePassword.php");
+		header("Location: " . SITE_URL . PATH . "includes/changePassword.php");
 ?>
 
 <!DOCTYPE HTML>
