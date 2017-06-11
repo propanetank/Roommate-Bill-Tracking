@@ -68,15 +68,15 @@
 			$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
 			$mailSubject = "New account created at " . SITE_URL;
 			$mailMessage = "<h3>Hello " . $name . "!</h3>
-			<p>A new account has been created for you at " . SITE_URL  . ". Please login with the following credentials and change your password when prompted.</p>
-			<p>Username: " . $username . "</p>
-			<p>Password: " . $plainPassword . "</p>
-			<p>After changing your password, please add your PayPal.me username at <a href=\"" . SITE_URL . "/profile.php\">" . SITE_URL . "/profile.php</a> if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursed for purchases.</p>
-			<p>To add a bill for one or more members of the household, simply login and visit <a href=\"" . SITE_URL . "/new.php?type=bill\">" . SITE_URL . "/new.php?type=bill</a> and select one or more members, the total bill amount, and an optional description (such as Internet). If more than one person is selected to receive the bill, the application will automatically split the amount, always rounding up to the nearest whole cent. If the person(s) receiving the bill have an email address on file, they will be emailed a notification of the newly requested bill.</p>
+			<p>A new account has been created for you at " . SITE_URL  . PATH . ". Please login with the following credentials and change your password when prompted.</p>
+			<p>Username: <b>" . $username . "</b></p>
+			<p>Password: <b>" . $plainPassword . "</b></p>
+			<p>After changing your password, please add your PayPal.me username at <a href=\"" . SITE_URL . PATH . "profile.php\">" . SITE_URL . PATH . "profile.php</a> if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursed for purchases.</p>
+			<p>To add a bill for one or more members of the household, simply login and visit <a href=\"" . SITE_URL . PATH . "new.php?type=bill\">" . SITE_URL . PATH . "new.php?type=bill</a> and select one or more members, the total bill amount, and an optional description (such as Internet). If more than one person is selected to receive the bill, the application will automatically split the amount, always rounding up to the nearest whole cent. If the person(s) receiving the bill have an email address on file, they will be emailed a notification of the newly requested bill.</p>
 			<p>--</p>
 			<p>The admins at " . SITE_TITLE . "</p>
 			<p><i>Please note that this email box might not be monitored and may be used solely for sending email.<br />
-			You are receiving this email because you are were registered for an account at <a href=\"" . SITE_URL ."\">" . SITE_URL . "</a></i></p>";
+			You are receiving this email because you are were registered for an account at <a href=\"" . SITE_URL . PATH . "\">" . SITE_URL . PATH . "</a></i></p>";
 			if (USE_SMTP === FALSE) {
 				// Send email via built-in mail function
 				mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);

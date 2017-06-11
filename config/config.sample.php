@@ -17,6 +17,7 @@
 	define('LOGIN_TYPE', 'local'); // Options here are google or local
 	define('SSL', false); // Enable if you can use SSL on your server and you are using local LOGIN_TYPE, otherwise it's not necessary
 	define('ADMIN_EMAIL', 'admin@example.com'); // Set so your users get notified when someone posts a bill regarding them
+	define('ADMIN_REPLY', 'reply@example.com'); // This is the email address that when users reply to a system email, the reply gets sent here, leave it blank ('') to not allow users to reply (the reply will get sent to the from mailbox, which in many cases doesn't get read or might not exist)
 	define('USE_SMTP', false); // Enable this if you can't send email from your server and require an external SMTP server, then uncomment and set the next 4 variables
 //	define('SMTP_HOST', 'smtp.example.com');
 //	define('SMTP_PORT', 25);
