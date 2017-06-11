@@ -25,7 +25,7 @@
 			<section id="primary">
 				<?php 
 				// Make sure someone didn't modify the data between pages and if so, cancel editing the bill because it might not be their bill
-				$billInfo = "SELECT bills.id, bto, name, amount, description, paid, paidDate FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
+				$billInfo = "SELECT bills.id, bto, name, amount, email, description, paid, paidDate FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
 				$getBill = $conn->query($billInfo);
 				if ($getBill->num_rows > 0) {
 					$existing = $getBill->fetch_assoc();
@@ -44,7 +44,33 @@
 						if ($existing['description'] != '')
 							echo  " for <b>" . $existing['description'] . "</b>. ";
 						else
-							echo ". ";
+							echo ".</p>";
+						if ($existing['email'] != '') {
+							// Email the user that a bill has been deleted
+							$mailTo =  $existing['name'] . " <" . $existing['email'] . ">";
+							$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+							if (ADMIN_REPLY != '')
+								$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
+							$mailHeaders .= "MIME-Version: 1.0\r\n";
+							$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
+							$mailSubject = $_SESSION['name'] . " has deleted a bill";
+							$mailMessage = "<h3>Hello " . $existing['name'] . "!</h3>
+							<p>" . $_SESSION['name'] . " has removed the following bill from your account: ";
+								if ($existing['description'] != '')
+									$mailMessage .= $existing['description'];
+								else
+									$mailMessage .= "<i>No description</i>";
+									$mailMessage .= " for " . $existing['amount'] . "</p>
+							<p>--<br />
+							The admins at " . SITE_TITLE . "<br />
+							<i>Please note that this email box might not be monitored and may be used solely for sending email.</i></p>";
+							if (USE_SMTP === FALSE) {
+								// Send email via built-in mail function
+								mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
+							} else {
+								// Send email via SMTP
+							}
+						}
 						echo "<a href=\"" . PATH . "profile.php\">Return to profile</a>.</p>";
 					} else
 						echo "<p class=\"err\">Error deleting bill.</p>";
@@ -58,6 +84,32 @@
 								echo  " for <b>" . $existing['description'] . "</b>. ";
 							else
 								echo ". ";
+							if ($existing['email'] != '') {
+								// Email the user that a bill has been restored
+								$mailTo =  $existing['name'] . " <" . $existing['email'] . ">";
+								$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+								if (ADMIN_REPLY != '')
+									$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
+								$mailHeaders .= "MIME-Version: 1.0\r\n";
+								$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
+								$mailSubject = $_SESSION['name'] . " has restored a bill";
+								$mailMessage = "<h3>Hello " . $existing['name'] . "!</h3>
+								<p>" . $_SESSION['name'] . " has restored the following bill to your account: ";
+									if ($existing['description'] != '')
+										$mailMessage .= $existing['description'];
+									else
+										$mailMessage .= "<i>No description</i>";
+										$mailMessage .= " for " . $existing['amount'] . "</p>
+								<p>--<br />
+								The admins at " . SITE_TITLE . "<br />
+								<i>Please note that this email box might not be monitored and may be used solely for sending email.</i></p>";
+								if (USE_SMTP === FALSE) {
+									// Send email via built-in mail function
+									mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
+								} else {
+									// Send email via SMTP
+								}
+							}
 							echo "<a href=\"" . PATH . "profile.php\">Return to profile</a>.</p>";
 						} else
 							echo "<p class=\"err\">Error recovering bill.</p>";
@@ -98,9 +150,51 @@
 						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]', paidDate='$currDate' WHERE id='$existing[id]'";
 					else
 						$updateBill = "UPDATE bills SET bto='$_POST[to]', amount='$amount', description='$description', paid='$_POST[paid]' WHERE id='$existing[id]'";
-					if ($conn->query($updateBill) === TRUE)
+					if ($conn->query($updateBill) === TRUE) {
+						if ($existing['email'] != '') {
+							// Email the user that a bill has been modified
+							$mailTo =  $existing['name'] . " <" . $existing['email'] . ">";
+							$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+							if (ADMIN_REPLY != '')
+								$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
+							$mailHeaders .= "MIME-Version: 1.0\r\n";
+							$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
+							$mailSubject = $_SESSION['name'] . " has modified a bill";
+							$mailMessage = "<h3>Hello " . $existing['name'] . "!</h3>
+							<p>" . $_SESSION['name'] . " has modified the following bill: ";
+								if ($existing['description'] != '')
+									$mailMessage .= $existing['description'];
+								else
+									$mailMessage .= "<i>No description</i>";
+							$mailMessage .= " for " . $existing['amount'] . "
+							marked as ";
+								if ($existing['paid'] === 'Y')
+									$mailMessage .= "paid";
+								else
+									$mailMessage .= "unpaid";
+							$mailMessage .= ".</p><p>The new bill is now: ";
+							if (isset($description))
+									$mailMessage .= $_POST['description'];
+								else
+									$mailMessage .= "<i>No description</i>";
+							$mailMessage .= " for " . $amount . "
+							marked as ";
+								if ($_POST['paid'] === 'Y')
+									$mailMessage .= "paid";
+								else
+									$mailMessage .= "unpaid";
+							$mailMessage .= ".</p><p>--<br />
+							The admins at " . SITE_TITLE . "<br />
+							<i>Please note that this email box might not be monitored and may be used solely for sending email.</i></p>";
+							if (USE_SMTP === FALSE) {
+								// Send email via built-in mail function
+								mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
+							} else {
+								// Send email via SMTP
+							}
+						}
 						echo "<p>Bill has been successfully updated. <a href=\"" . PATH . "profile.php\">Return to profile.</a></p>";
-					else
+					} else
 						echo "<p class=\"err\">" . $conn->error . "<a href=\"" . PATH . "profile.php\">Return to profile.</a></p>";
 				} else { ?>
 				<h2>Edit Bill</h2>
@@ -142,7 +236,7 @@
 																				unset($_SESSION['amt']);
 																			} else
 																				echo $existing['amount'];
-																			?>" placeholder="0.00" maxlength="6" size="6" required />
+																			?>" placeholder="0.00" step="0.01" maxlength="6" size="6" required />
 							</td>
 							<td>
 								<input type="text" name="description" value="<?php
