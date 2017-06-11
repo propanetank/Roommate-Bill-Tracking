@@ -59,24 +59,23 @@
 			
 			// If the user has an email on-file, send them an email via the configured process to send email, either built-in mail function or via smtp
 			if ($result['email'] != '') {
-				$mailTo =  $result['name'] . " <" . $result['name'] . ">";
+				$mailTo =  $result['name'] . " <" . $result['email'] . ">";
 				$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
 				if (ADMIN_REPLY != '')
 					$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
-				$mailHeaders .= "MINE-Version: 1.0\r\n";
+				$mailHeaders .= "MIME-Version: 1.0\r\n";
 				$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
 				$mailSubject = "New bill in your account from " . $_SESSION['name'];
 				$mailMessage = "<h3>Hello " . $result['name'] . "!</h3>
-				<p>A new bill has been posted to your account from " . $_SESSION['name'] . " in the amount of ". $amount . " for " . $description . ".</p>
+				<p>A new bill has been posted to your account from <b>" . $_SESSION['name'] . "</b> in the amount of <b>$". $amount . "</b> for <b>" . $description . "</b>.</p>
 				<p>You can view this bill by logging into your account at <a href=\"" . SITE_URL . PATH . "dashboard.php\">" . SITE_URL . PATH . "dashboard.php</a> or by copying and pasting the following into your web browser URL bar:<br />
 				" . SITE_URL . PATH . "dashboard.php</p>
-				<p>--</p>
-				<p>The admins at " . SITE_TITLE . "</p>
-				<p><i>Please note that this email box might not be monitored and may be used solely for sending email.<br />
-				You are receiving this email because you are were registered for an account at <a href=\"" . SITE_URL . PATH . "\">" . SITE_URL . PATH . "</a></i></p>";
+				<p>--<br />
+				The admins at " . SITE_TITLE . "<br />
+				<i>Please note that this email box might not be monitored and may be used solely for sending email.</i></p>";
 				if (USE_SMTP === FALSE) {
 					// Send email via built-in mail function
-					mail($mailTo, $mailSubject, $mailMessage, $mailFrom);
+					mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
 				} else {
 					// Send email via SMTP
 				}

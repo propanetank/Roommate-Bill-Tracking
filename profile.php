@@ -146,7 +146,7 @@
 							echo "</table>";
 							echo "</div>";
 						} else
-							echo "<p>No deleted bills found by you!</p>";
+							echo "<p>You haven't deleted any bills. If you delete one, they will show here for 7 days.</p>";
 					?>
 				</div>
 				<h2>Received Bills</h2>
@@ -174,7 +174,7 @@
 											  <td>" . $row["description"] . "</td>";
 											  if ($row['paid'] === 'N') {
 											  	if ($row['paypal'] != '')
-											  		echo "<td><input type=\"checkbox\" name=\"bill\" value=" . $row["id"] . " /></td>";
+											  		echo "<td><input type=\"checkbox\" name=\"bill\" value=" . $row['id'] . ":" . $row['bfrom'] . " /></td>";
 											  	else
 											  		echo "<td>No Paypal Found</td>";
 											  } else

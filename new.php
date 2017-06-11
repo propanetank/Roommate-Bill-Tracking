@@ -54,7 +54,7 @@
 								</select>
 							</td>
 							<td>
-								$ <input type="number" name="amount" placeholder="0.00" maxlength="6" size="6" value="<?php
+								$ <input type="number" name="amount" placeholder="0.00" maxlength="6" size="6" step="0.01" value="<?php
 																														if (isset($_SESSION['amt'])) {
 																															echo $_SESSION['amt'];
 																															unset ($_SESSION['amt']);
