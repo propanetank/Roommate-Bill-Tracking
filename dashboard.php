@@ -89,7 +89,7 @@
 				<h2>Bills</h2>
 					<form name="bills" action="paybill.php" method="post">
 						<?php
-						$getBills = "SELECT bills.id, name, bdate, amount, description, paypal FROM users, bills WHERE bto='$_SESSION[uid]' AND bfrom=users.id AND paid='N' ORDER BY bdate, btime DESC";
+						$getBills = "SELECT bills.id, bfrom, name, bdate, amount, description, paypal FROM users, bills WHERE bto='$_SESSION[uid]' AND bfrom=users.id AND paid='N' ORDER BY bdate, btime DESC";
 						$billList = $conn->query($getBills);
 						if ($billList->num_rows > 0) {
 							echo "<div style=\"overflow-x: auto;\">";
@@ -104,11 +104,11 @@
 							while ($row = $billList->fetch_assoc()) {
 								echo "<tr>";
 								echo "<td>" . $row["bdate"] . "</td>
-									  <td>" . $row["name"] . "<input type=\"hidden\" name=\"name\" value=\"" . $row["name"] . "\" /></td>
+									  <td>" . $row["name"] . "</td>
 									  <td>$" . $row["amount"] . "</td>
 									  <td>" . $row["description"] . "</td>";
 									  if ($row['paypal'] != '')
-									  	echo "<td><input type=\"checkbox\" name=\"bill\" value=" . $row["id"] . " /></td>";
+									  	echo "<td><input type=\"checkbox\" name=\"bill[]\" value=\"" . $row['id'] . ":" . $row['bfrom'] . "\" /></td>";
 									  else
 									  	echo "<td>No Paypal Found</td>";
 									  echo "</tr>";

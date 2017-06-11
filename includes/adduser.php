@@ -17,16 +17,21 @@
 		$username = $_POST['username'];
 		if (!preg_match("/[a-zA-Z]+/", $username))
 			$_SESSION['usernameErrtxt'] = "Invalid input for Username, can only contain a-z, A-Z, 0-9";
-	} else {
+		else {
+			$usernameUniq = $conn->query("SELECT username FROM users WHERE username='$username'");
+			if ($usernameUniq->num_rows == 1)
+				$_SESSION['usernameErrtxt'] = "Username already in use, please enter a different one.";
+		}
+	} else
 		$_SESSION['usernameErrtxt'] = "Username cannot be left blank";
-	}
+
 	if (!empty($_POST['name'])) {
 		$name = sanitizeData($_POST['name']);
 		if (!preg_match("/[a-zA-Z ]+/", $name))
 			$_SESSION['nameErrtxt'] = "Invalid input for Name. Only a-z, A-Z, and spaces are allowed.";
-	} else {
+	} else
 		$_SESSION['nameErrtxt'] = "Name cannot be left blank";
-	}
+
 	if (!empty($_POST['email'])) {
 		$email = $_POST['email'];
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -40,7 +45,6 @@
 
 	if (isset($_SESSION['usernameErrtxt']) || isset($_SESSION['nameErrtxt']) || isset($_SESSION['emailErrtxt']) || isset($_SESSION['paypalErrtxt'])) {
 		$_SESSION['userStatus'] = "<p class=\"err\">" . $_SESSION['usernameErrtxt'] . "<br />" . $_SESSION['nameErrtxt'] . "<br />" . $_SESSION['emailErrtxt'] . "<br />" . $_SESSION['paypalErrtxt'] . "</p>";
-		unset($_SESSION['usernameErrtxt'], $_SESSION['nameErrtxt'], $_SESSION['emailErrtxt'], $_SESSION['paypalErrtxt']);
 		header("Location: " . SITE_URL . PATH . "profile.php?error=true");
 	}
 
@@ -54,31 +58,33 @@
 	$addUser = $conn->query($createUser);
 	if ($addUser === TRUE) {
 		$_SESSION['userStatus'] = "<p>Added <b>" . $name . "</b> with username <b>" . $username . "</b> and password <b>" . $plainPassword . "</b> with role <b>" . $_POST['role'] . "</b>. The new user will be required to change their password on login. If an email was given, the user has been emailed their login information.</p>";
-		if ($email != '') {
+		if (isset($email)) {
 			// Email the user their login details
-			$mailTo =  "$name <$email>";
-			$mailFrom = "FROM: ADMIN_EMAIL";
+			$mailTo =  $name . " <" . $email . ">";
+			$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+			if (ADMIN_REPLY != '')
+				$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
+			$mailHeaders .= "MINE-Version: 1.0\r\n";
+			$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
 			$mailSubject = "New account created at " . SITE_URL;
-			$mailMessage = "Hello $name!\r\n\r\n
-			A new account has been created for you at SITE_URL . Please login with the following credentials and change your password when prompted.\r\n\r\n
-			Username: $username\r\n
-			Password: $plainPassword\r\n\r\n
-
-			After changing your password, please add your PayPal.me username at SITE_URL/profile.php if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursed for purchases.\r\n\r\n
-			To add a bill for one or more members of the household, simply login and visit SITE_URL/new.php?type=bill and select one or more members, the total bill amount, and an optional description (such as Internet). If more than one person is selected to receive the bill, the application will automatically split the amount, always rounding up to the nearest whole cent. If the person(s) receiving the bill have an email address on file, they will be emailed a notification of the newly requested bill.\r\n\r\n
-			If you have any questions, feel free to contact the site administrator at ADMIN_EMAIL .
-			--
-			The admins at SITE_TITLE\r\n\r\n
-			Please note that this email box might not be monitored and may be used solely for sending email.\r\n
-			You are receiving this email because you are were registered for an account at SITE_URL";
+			$mailMessage = "<h3>Hello " . $name . "!</h3>
+			<p>A new account has been created for you at " . SITE_URL  . ". Please login with the following credentials and change your password when prompted.</p>
+			<p>Username: " . $username . "</p>
+			<p>Password: " . $plainPassword . "</p>
+			<p>After changing your password, please add your PayPal.me username at <a href=\"" . SITE_URL . "/profile.php\">" . SITE_URL . "/profile.php</a> if one hasn't already been entered (or update it if it's wrong) so that you can get paid when you request money from a household member. Without it, you can't get reimbursed for purchases.</p>
+			<p>To add a bill for one or more members of the household, simply login and visit <a href=\"" . SITE_URL . "/new.php?type=bill\">" . SITE_URL . "/new.php?type=bill</a> and select one or more members, the total bill amount, and an optional description (such as Internet). If more than one person is selected to receive the bill, the application will automatically split the amount, always rounding up to the nearest whole cent. If the person(s) receiving the bill have an email address on file, they will be emailed a notification of the newly requested bill.</p>
+			<p>--</p>
+			<p>The admins at " . SITE_TITLE . "</p>
+			<p><i>Please note that this email box might not be monitored and may be used solely for sending email.<br />
+			You are receiving this email because you are were registered for an account at <a href=\"" . SITE_URL ."\">" . SITE_URL . "</a></i></p>";
 			if (USE_SMTP === FALSE) {
 				// Send email via built-in mail function
-				mail($mailTo, $mailSubject, $mailMessage, $mailFrom);
+				mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
 			} else {
 				// Send email via SMTP
 			}
 		}
-	} else 
+	} else
 		$_SESSION['userStatus'] =  "<p class=\"err\">Unable to add the user to the database.<br /></p>";
 	header("Location: " . SITE_URL . PATH . "profile.php");
 ?>

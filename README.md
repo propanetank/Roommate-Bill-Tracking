@@ -10,7 +10,7 @@ A relatively simple PHP application for roommates to easily manage shared bills 
 
 ### Requirements
  - Web server (Apache is known to work, Nginx should also work just fine)
- - PHP 7 or greater
+ - PHP 5.6 or greater
  - MySQL or fork of for database (PostgreSQL will not work as of now, SQL statements will need to be rewritten, not a top priority, just get MySQL, it works)
 
 ### Installation

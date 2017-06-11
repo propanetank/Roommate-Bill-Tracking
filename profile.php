@@ -42,6 +42,7 @@
 			<?php require("includes/nav.php"); ?>
 		</section>
 		<div id="container">
+			<!-- Begin Primary content -->
 			<section id="primary">
 				<h1><?php echo $_SESSION['name']; ?>'s Profile</h1>
 				<h2>Sent Bills</h2>
@@ -223,6 +224,8 @@
 				?>
 			</div>
 			</section>
+			<!-- End primary content -->
+			<!-- Begin user settings and admin panels -->
 			<section id="right">
 				<h2>Update profile</h2>
 				<?php
@@ -247,6 +250,52 @@
 				<p><a href="<?php echo PATH; ?>includes/changePassword.php">Update Password</a></p>
 				<h2>Groceries</h2>
 				<?php
+					// Controls Adding and removing self from a grocery item
+					if (isset($_GET['removeGrocery'])) {
+						$getItemUsers = "SELECT users FROM groceries WHERE id='$_GET[removeGrocery]'";
+						if ($conn->query($getItemUsers)->num_rows == 1) {
+							$users = $conn->query($getItemUsers)->fetch_object()->users;
+							$usersArr = explode(',', $users);
+							$j = 0;
+							for ($i=0; $i < count($usersArr); $i++) {
+								if ($usersArr[$i] == $_SESSION['uid'] && $i < (count($usersArr) - 1))
+									$i++;
+								else if ($usersArr[$i] == $_SESSION['uid'])
+									break;
+								$newUsersArr[$j] = $usersArr[$i];
+								$j++;
+							}
+							$newUsers = implode(',', $newUsersArr);
+							$removeItemUser = "UPDATE groceries SET users='$newUsers' WHERE id='$_GET[removeGrocery]'";
+							if ($conn->query($removeItemUser) === FALSE) {
+								$_SESSION['updateGroceryErrtxt'] = "Error updating  the database.";
+								header("Location: " . SITE_URL . PATH . "/profile.php?error=true");
+							}
+						} else {
+							$_SESSION['updateGroceryErrtxt'] = "Error, unable to find the specified grocery item.";
+							header("Location: " . SITE_URL . PATH . "/profile.php?error=true");
+						}
+					} else if (isset($_GET['addGrocery'])) {
+						$getItemUsers = "SELECT users FROM groceries WHERE id='$_GET[addGrocery]'";
+						if ($conn->query($getItemUsers)->num_rows == 1) {
+							$users = $conn->query($getItemUsers)->fetch_object()->users;
+							if ($users === NULL || $users == '')
+								$users = $_SESSION['uid'];
+							else
+								$users .= "," . $_SESSION['uid'];
+							$addItemUser = "UPDATE groceries SET users='$users' WHERE id='$_GET[addGrocery]'";
+							if ($conn->query($addItemUser) === FALSE) {
+								$_SESSION['updateGroceryErrtxt'] = "Error updating  the database.";
+								header("Location: " . SITE_URL . PATH . "/profile.php?error=true");
+							}
+						} else {
+							$_SESSION['updateGroceryErrtxt'] = "Error, unable to find the specified grocery item.";
+							header("Location: " . SITE_URL . PATH . "/profile.php?error=true");
+						}
+					}
+					// End grocery list control
+
+					// Begin displaying the shared grocery list
 					$getGroceries = "SELECT * FROM groceries";
 					$selectGroceries = $conn->query($getGroceries);
 					if($selectGroceries->num_rows > 0) {
@@ -288,9 +337,9 @@
 								end:
 								echo "</td>";
 								if ($nameMatch)
-									echo "<td><a href=\"includes/updateprofile.php?removeGrocery=" . $row['id'] . "\">Remove Me</a></td>";
+									echo "<td><a href=\"profile.php?removeGrocery=" . $row['id'] . "\">Remove Me</a></td>";
 								else
-									echo "<td><a href=\"includes/updateprofile.php?addGrocery=" . $row['id'] . "\">Add Me</a></td>";
+									echo "<td><a href=\"profile.php?addGrocery=" . $row['id'] . "\">Add Me</a></td>";
 							echo "</tr>";
 						}
 						echo "</table>";
@@ -298,8 +347,14 @@
 					} else {
 						echo "<p>Nothing found for shared groceries!</p>";
 					}
+					if (isset($_SESSION['updateGroceryErrtxt'])) {
+						echo "<p class=\"err\">" . $_SESSION['updateGroceryErrtxt'] . "</p>";
+						unset($_SESSION['updateGroceryErrtxt']);
+					}
+					// End displaying shared grocery list
 				?>
 				<?php
+				// Begin admin functions
 					if ($_SESSION['role'] === 'ADMIN') {
 				?>
 				<h2>Add User</h2>
@@ -363,6 +418,7 @@
 					}
 				}
 				}
+				// End admin functions
 				?>
 			</section>
 		</div>
