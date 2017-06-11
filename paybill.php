@@ -81,7 +81,6 @@
 					if ($getPayeeEmail->num_rows != 1)
 						echo "<p class=\"err\">Error, unable to get " . $_SESSION['bill'][0]['name'] . "'s email address, email will not be sent notifying them that you paid bills from them.</p>";
 					$email = $getPayeeEmail->fetch_object();
-					$noDescription = "<i>No description</i>";
 
 					// If the payee has an email on file, sent them an email summarizing what bills have been paid.
 					if ($email->email != '') {
@@ -96,12 +95,12 @@
 						$mailMessage = "<h3>Hello " . $origName . "!</h3>
 						<p>" . $_SESSION['name'] . " has paid the following bills from you:<br /><ul>";
 							for ($i=0; $i < count($_SESSION['bill']); $i++) {
-								$mailMessage .= "<li>$" . $_SESSION['bill'][$i]['amount'] . " for " . 
+								$mailMessage .= "<li>$" . $_SESSION['bill'][$i]['amount'] . " for ";
 																					if ($_SESSION['bill'][$i]['description'] != '')
-																						$_SESSION['bill'][$i]['description']
+																						$mailMessage .= $_SESSION['bill'][$i]['description'];
 																					else
-																						$noDescription
-												. "</li>";
+																						$mailMessage .= "<i>No description</i>";
+								$mailMessage .= "</li>";
 
 							}
 						$mailMessage .= "</ul></p>
