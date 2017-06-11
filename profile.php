@@ -189,7 +189,8 @@
 							<?php 
 						} else {
 							echo "<p>No unpaid bills found for " . $_SESSION['name'] . "!</p>";
-						}
+							?></form>
+				  <?php }
 					?>
 			</div>
 			<h3><a style="cursor: pointer; text-decoration: none;" onclick="showhide('rpaid')">Paid</a></h3>
