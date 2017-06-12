@@ -67,8 +67,12 @@
 				$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
 				$mailSubject = "New bill in your account from " . $_SESSION['name'];
 				$mailMessage = "<h3>Hello " . $result['name'] . "!</h3>
-				<p>A new bill has been posted to your account from <b>" . $_SESSION['name'] . "</b> in the amount of <b>$". $amount . "</b> for <b>" . $description . "</b>.</p>
-				<p>You can view this bill by logging into your account at <a href=\"" . SITE_URL . PATH . "dashboard.php\">" . SITE_URL . PATH . "dashboard.php</a> or by copying and pasting the following into your web browser URL bar:<br />
+				<p>A new bill has been posted to your account from <b>" . $_SESSION['name'] . "</b> in the amount of <b>$". $amount . "</b> for ";
+				if (isset($description))
+					$mailMessage .= "<b>" . $description . "</b>";
+				else
+					$mailMessage .= "<i>No description</i>";
+				$mailMessage .= ".</p><p>You can view this bill by logging into your account at <a href=\"" . SITE_URL . PATH . "dashboard.php\">" . SITE_URL . PATH . "dashboard.php</a> or by copying and pasting the following into your web browser URL bar:<br />
 				" . SITE_URL . PATH . "dashboard.php</p>
 				<p>--<br />
 				The admins at " . SITE_TITLE . "<br />

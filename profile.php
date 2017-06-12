@@ -46,6 +46,12 @@
 			<section id="primary">
 				<h1><?php echo $_SESSION['name']; ?>'s Profile</h1>
 				<h2>Sent Bills</h2>
+				<?php
+					if (isset($_GET['editerror'])) {
+						echo "<p class=\"err\">" . $_SESSION['errtxt'] . "</p>";
+						unset($_SESSION['errtxt']);
+					}
+				?>
 				<h3><a style="cursor: pointer; text-decoration: none;" onclick="showhide('sunpaid')">Unpaid</a></h3>
 				<div id="sunpaid">
 					<?php 
