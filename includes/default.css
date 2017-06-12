@@ -9,6 +9,9 @@ h1 {
 	font-size: 18pt;
 	font-weight: 400;
 }
+h2, h3 {
+	font-weight: 400;
+}
 div#container {
 	background-color: #cccccc;
 	min-width: 75%;
@@ -53,16 +56,17 @@ table.dashboard {
 	background-color: #afafaf;
 }
 a {
-	text-decoration: none;
+	text-decoration: underline;
 	color: #000000;
 }
 a:visited {
-	text-decoration: none;
+	text-decoration: underline;
 	color: #000000;
 }
 a:hover {
 	text-decoration: underline;
 	color: #000000;
+	font-weight: 600;
 }
 
 /* Navigation */
@@ -105,10 +109,8 @@ nav li a, nav li a:visited {
 nav li a:hover, nav li a.active {
 	background-color: white;
 	text-decoration: none;
+	font-weight: 400;
 }
-
-/* Bill Entry Form */
-
 
 /* Login Form */
 label {

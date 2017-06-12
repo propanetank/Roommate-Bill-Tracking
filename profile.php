@@ -46,6 +46,12 @@
 			<section id="primary">
 				<h1><?php echo $_SESSION['name']; ?>'s Profile</h1>
 				<h2>Sent Bills</h2>
+				<?php
+					if (isset($_GET['editerror'])) {
+						echo "<p class=\"err\">" . $_SESSION['errtxt'] . "</p>";
+						unset($_SESSION['errtxt']);
+					}
+				?>
 				<h3><a style="cursor: pointer; text-decoration: none;" onclick="showhide('sunpaid')">Unpaid</a></h3>
 				<div id="sunpaid">
 					<?php 
@@ -146,7 +152,7 @@
 							echo "</table>";
 							echo "</div>";
 						} else
-							echo "<p>No deleted bills found by you!</p>";
+							echo "<p>You haven't deleted any bills. If you delete one, they will show here for 7 days.</p>";
 					?>
 				</div>
 				<h2>Received Bills</h2>
@@ -174,7 +180,7 @@
 											  <td>" . $row["description"] . "</td>";
 											  if ($row['paid'] === 'N') {
 											  	if ($row['paypal'] != '')
-											  		echo "<td><input type=\"checkbox\" name=\"bill\" value=" . $row["id"] . " /></td>";
+											  		echo "<td><input type=\"checkbox\" name=\"bill\" value=" . $row['id'] . ":" . $row['bfrom'] . " /></td>";
 											  	else
 											  		echo "<td>No Paypal Found</td>";
 											  } else
@@ -189,7 +195,8 @@
 							<?php 
 						} else {
 							echo "<p>No unpaid bills found for " . $_SESSION['name'] . "!</p>";
-						}
+							?></form>
+				  <?php }
 					?>
 			</div>
 			<h3><a style="cursor: pointer; text-decoration: none;" onclick="showhide('rpaid')">Paid</a></h3>

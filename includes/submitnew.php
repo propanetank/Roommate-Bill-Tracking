@@ -58,28 +58,35 @@
 			$_SESSION['to'][$i] = $result['name'];
 			
 			// If the user has an email on-file, send them an email via the configured process to send email, either built-in mail function or via smtp
-/*			if ($result['email'] != '') {
-				$mailTo =  "$result['name'] <$result['email']>";
-				$mailFrom = "FROM: ADMIN_EMAIL";
-				$mailSubject = "New bill in your account";
-				$mailMessage = "Hello $result['name']!\r\n\r\n
-				A new bill has been posted to your account from $_SESSION['name'] in the amount of $amount for $description .\r\n
-				You can view this bill by logging into your account at SITE_URL/dashboard.php or by copying and pasting the following into your web browsers URL bar:\r\n
-				SITE_URL/dashboard.php\r\n\r\n
-				--
-				The admins at SITE_TITLE\r\n\r\n
-				Please note that this email box might not be monitored and may be used solely for sending email.\r\n
-				You are receiving these emails because you are a registered user of SITE_TITLE";
+			if ($result['email'] != '') {
+				$mailTo =  $result['name'] . " <" . $result['email'] . ">";
+				$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
+				if (ADMIN_REPLY != '')
+					$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
+				$mailHeaders .= "MIME-Version: 1.0\r\n";
+				$mailHeaders .= "Content-Type: text/html; charset=UTF-8\r\n";
+				$mailSubject = "New bill in your account from " . $_SESSION['name'];
+				$mailMessage = "<h3>Hello " . $result['name'] . "!</h3>
+				<p>A new bill has been posted to your account from <b>" . $_SESSION['name'] . "</b> in the amount of <b>$". $amount . "</b> for ";
+				if (isset($description))
+					$mailMessage .= "<b>" . $description . "</b>";
+				else
+					$mailMessage .= "<i>No description</i>";
+				$mailMessage .= ".</p><p>You can view this bill by logging into your account at <a href=\"" . SITE_URL . PATH . "dashboard.php\">" . SITE_URL . PATH . "dashboard.php</a> or by copying and pasting the following into your web browser URL bar:<br />
+				" . SITE_URL . PATH . "dashboard.php</p>
+				<p>--<br />
+				The admins at " . SITE_TITLE . "<br />
+				<i>Please note that this email box might not be monitored and may be used solely for sending email.</i></p>";
 				if (USE_SMTP === FALSE) {
 					// Send email via built-in mail function
-					mail($mailTo, $mailSubject, $mailMessage, $mailFrom);
+					mail($mailTo, $mailSubject, $mailMessage, $mailHeaders);
 				} else {
 					// Send email via SMTP
 				}
 			} else {
 				echo "<p>" . $result['name'] . " doesn't have an email on file, unable to notify user.</p>";
 			}
-*/			$i++;
+			$i++;
 		}
 	}
 	$conn->close();
