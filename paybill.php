@@ -65,7 +65,7 @@
 				} else if (isset($_GET['paid']) && $_GET['paid'] === 'y') {
 					$i = 0;
 					$currDate = date('m/d/y');
-					/*foreach ($_SESSION['billid'] as $value) {
+					foreach ($_SESSION['billid'] as $value) {
 						$updateBill = "UPDATE bills SET paid='Y', paidDate='$currDate' WHERE id='$value'";
 						if ($conn->query($updateBill) === FALSE) {
 							echo "<p class=\"err\">Unable to update the bill to " . $_SESSION['bill'][$i]['name'] . " in the amount of $" . $_SESSION['bill'][$i]['amount'] . " in the database. Unknown error.</p>";
@@ -74,7 +74,7 @@
 						}
 						$i++;
 					}
-					*/
+
 					$origID = $_SESSION['bill'][0]['id'];
 					$origName = $_SESSION['bill'][0]['name'];
 					$getPayeeEmail = $conn->query("SELECT email FROM users WHERE id='$origID'");
