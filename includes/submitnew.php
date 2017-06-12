@@ -60,7 +60,7 @@
 			// If the user has an email on-file, send them an email via the configured process to send email, either built-in mail function or via smtp
 			if ($result['email'] != '') {
 				$mailTo =  $result['name'] . " <" . $result['email'] . ">";
-				$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+				$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
 				if (ADMIN_REPLY != '')
 					$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
 				$mailHeaders .= "MIME-Version: 1.0\r\n";

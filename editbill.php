@@ -51,7 +51,7 @@
 						if ($existingUser['email'] != '') {
 							// Email the user that a bill has been deleted
 							$mailTo =  $existingUser['name'] . " <" . $existingUser['email'] . ">";
-							$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+							$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
 							if (ADMIN_REPLY != '')
 								$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
 							$mailHeaders .= "MIME-Version: 1.0\r\n";
@@ -90,7 +90,7 @@
 							if ($existingUser['email'] != '') {
 								// Email the user that a bill has been restored
 								$mailTo =  $existingUser['name'] . " <" . $existingUser['email'] . ">";
-								$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+								$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
 								if (ADMIN_REPLY != '')
 									$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
 								$mailHeaders .= "MIME-Version: 1.0\r\n";
@@ -157,7 +157,7 @@
 						if ($existingUser['email'] != '') {
 							// Email the user that a bill has been modified
 							$mailTo =  $existingUser['name'] . " <" . $existingUser['email'] . ">";
-							$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+							$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
 							if (ADMIN_REPLY != '')
 								$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
 							$mailHeaders .= "MIME-Version: 1.0\r\n";

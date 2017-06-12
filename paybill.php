@@ -86,7 +86,7 @@
 					if ($email->email != '') {
 						// Email the user their login details
 						$mailTo =  $origName . " <" . $email->email . ">";
-						$mailHeaders = "FROM: " . ADMIN_EMAIL . "\r\n";
+						$mailHeaders = "FROM: " . SITE_TITLE . "<" . ADMIN_EMAIL . ">\r\n";
 						if (ADMIN_REPLY != '')
 							$mailHeaders .= "Reply-To: " . ADMIN_REPLY . "\r\n";
 						$mailHeaders .= "MIME-Version: 1.0\r\n";
