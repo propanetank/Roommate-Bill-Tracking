@@ -14,6 +14,10 @@
 	// Make sure they actually sent a username or password
 	if(empty($_POST['username']) || empty($_POST['password'])) {
 		$_SESSION['errtxt'] = "You must enter a username and password.";
+		
+		// If username is provided, sanitize it
+		if (!empty($_POST['username']))
+			$username = sanitizeData($_POST['username']);
 		header("Location: " . SITE_URL . PATH . "login.php?error=true&username=" . $username);
 	}
 
@@ -25,6 +29,9 @@
 	$salt = $pass[1];
 
 	$username = $_POST['username'];
+
+	// Sanitize the username
+	$username = sanitizeData($_POST['username']);
 	$password = crypt($_POST['password'], '$6$' . $salt);
 
 

@@ -25,7 +25,7 @@
 			<section id="primary">
 				<?php 
 				// Make sure someone didn't modify the data between pages and if so, cancel editing the bill because it might not be their bill
-				$billInfo = "SELECT bills.id, bto, amount, description, paid, paidDate FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
+				$billInfo = "SELECT bills.id, name, bto, amount, description, paid, paidDate FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id='$_SESSION[uid]'";
 				$getToName = "SELECT name, email FROM users, bills WHERE bills.id='$_GET[bill]' AND users.id=bills.bto";
 				$getBill = $conn->query($billInfo);
 				$getUserName = $conn->query($getToName);
